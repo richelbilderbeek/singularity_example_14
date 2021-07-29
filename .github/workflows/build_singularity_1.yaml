@@ -26,5 +26,5 @@ jobs:
         run: ./build_singularity_1.sh
 
       - name: Run container
-        run: singularity exec singularity_1.sif Rscript script.R
+        run: ./run_singularity_1.sh
 
