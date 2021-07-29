@@ -81,7 +81,7 @@ to run the container built from [Singularity_2](Singularity_2):
 
 ```
 #!/bin/bash
-singularity exec singularity_2.sif Rscript script.R
+cat script.R | singularity exec singularity_2.sif R --vanilla --silent --no-echo
 ```
 
 Running this locally goes fine.
@@ -89,9 +89,8 @@ Running this locally goes fine.
 The error GHA gives, however, is:
 
 ```
-Run ./run_singularity_1.sh
-Fatal error: cannot open file 'script.R': No such file or directory
-Error: Process completed with exit code 2.
+Run ./run_singularity_2.sh
+
 ```
 
 
