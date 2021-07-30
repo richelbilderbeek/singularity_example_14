@@ -1,2 +1,2 @@
 #!/bin/bash
-cat script.R | singularity exec singularity_3.sif
+cat script.R | ./singularity_3.sif

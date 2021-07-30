@@ -124,7 +124,7 @@ to run the container built from [Singularity_3](Singularity_3):
 
 ```
 #!/bin/bash
-cat script.R | singularity exec singularity_3.sif
+cat script.R | ./singularity_3.sif
 ```
 
 Running this locally goes fine, also on GitHub Actions!
