@@ -129,3 +129,31 @@ cat script.R | ./singularity_3.sif
 
 Running this locally goes fine, also on GitHub Actions!
 
+# Attempt 4: fakeroot experiment
+
+In this case, we'll re-use [Singularity_3](Singularity_3),
+yet build it differently.
+
+[build_singularity_4.sh](build_singularity_4.sh) is a simple shell script 
+to build a container from [Singularity_3](Singularity_3):
+
+```
+#!/bin/bash
+singularity build --fakeroot singularity_4.sif Singularity_3
+```
+
+[run_singularity_4.sh](run_singularity_4.sh) is a simple shell script
+to run the container built from [Singularity_4](Singularity_4):
+
+```
+#!/bin/bash
+cat script.R | ./singularity_4.sif
+```
+
+Running this locally goes fine, also on GitHub Actions!
+
+
+
+# Attempt 5: run script directly revised
+
+
