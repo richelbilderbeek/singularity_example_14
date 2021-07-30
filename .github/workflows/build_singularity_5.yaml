@@ -2,10 +2,10 @@ on:
   push:
   pull_request:
 
-name: build_singularity_3
+name: build_singularity_5
 
 jobs:
-  build_singularity_3:
+  build_singularity_5:
 
     runs-on: ubuntu-latest
     strategy:
