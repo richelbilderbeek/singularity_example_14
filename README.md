@@ -132,7 +132,9 @@ Running this locally goes fine, also on GitHub Actions!
 # Attempt 4: fakeroot experiment
 
 In this case, we'll re-use [Singularity_3](Singularity_3),
-yet build it differently.
+yet build it differently, using the
+[fakeroot](https://sylabs.io/guides/3.8/user-guide/fakeroot.html?highlight=fakeroot)
+feature.
 
 [build_singularity_4.sh](build_singularity_4.sh) is a simple shell script 
 to build a container from [Singularity_3](Singularity_3):
@@ -150,10 +152,76 @@ to run the container built from [Singularity_4](Singularity_4):
 cat script.R | ./singularity_4.sif
 ```
 
-Running this locally goes fine, also on GitHub Actions!
+Running this locally goes fine, but fails on GitHub Actions:
 
+```
+Run ./build_singularity_4.sh
+FATAL:   could not use fakeroot: no mapping entry found in /etc/subuid for root
+Error: Process completed with exit code 255.
+```
 
+Apparently, GHA does not support that mapping.
 
 # Attempt 5: run script directly revised
+
+[Singularity_5](Singularity_5) is a minimal Singularity container,
+with a `runscript` section added:
+
+```
+Bootstrap: docker
+From: r-base
+
+%runscript
+exec Rscript "$@"
+
+%post
+    Rscript -e 'install.packages("glue")'
+```
+
+[build_singularity_5.sh](build_singularity_5.sh) is a simple shell script 
+to build a container from [Singularity_5](Singularity_5):
+
+```
+#!/bin/bash
+singularity build --fakeroot singularity_5.sif Singularity_5
+```
+
+[run_singularity_5.sh](run_singularity_5.sh) is a simple shell script
+to run the container built from [Singularity_5](Singularity_5):
+
+```
+#!/bin/bash
+./singularity_5.sif script.R
+```
+
+Running this locally goes fine, but fails on GitHub Actions:
+
+```
+Run ./build_singularity_5.sh
+FATAL:   could not use fakeroot: no mapping entry found in /etc/subuid for root
+Error: Process completed with exit code 255.
+```
+
+# Attempt 6: run script, container built with sudo
+
+Here we will re-use [Singularity_5](Singularity_5).
+
+[build_singularity_6.sh](build_singularity_6.sh) is a simple shell script 
+to build a container from [Singularity_5](Singularity_5):
+
+```
+#!/bin/bash
+sudo -E singularity build singularity_6.sif Singularity_5
+```
+
+[run_singularity_6.sh](run_singularity_6.sh) is a simple shell script
+to run the container built from [Singularity_5](Singularity_5):
+
+```
+#!/bin/bash
+./singularity_6.sif script.R
+```
+
+Running this locally goes fine...
 
 
