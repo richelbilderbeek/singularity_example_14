@@ -14,6 +14,11 @@ This is the R script, called [script.R](script.R):
 glue::glue("Hello {target}", target = "world")
 ```
 
+`Attempt 3: clean up` is the best way:
+
+ * build with sudo (i.e. no `--fakeroot`)
+ * send the script text to the container, not the script filename
+
 # Attempt 1: Singularity does not run scripts
 
 [Singularity_1](Singularity_1) is a minimal Singularity container:
@@ -96,6 +101,10 @@ cat script.R | singularity exec singularity_2.sif R --vanilla --silent --no-echo
 Running this locally goes fine, also on GitHub Actions!
 
 # Attempt 3: clean up
+
+```
+THIS IS THE BEST WAY
+```
 
 [Singularity_3](Singularity_3) is a minimal Singularity container,
 with a `runscript` section added:
@@ -222,6 +231,11 @@ to run the container built from [Singularity_5](Singularity_5):
 ./singularity_6.sif script.R
 ```
 
-Running this locally goes fine...
+Running this locally goes fine, however, on GHA this goes the classic sideways again:
 
+```
+Run ./run_singularity_6.sh
+Fatal error: cannot open file 'script.R': No such file or directory
+Error: Process completed with exit code 2.
+```
 
