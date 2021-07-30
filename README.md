@@ -14,7 +14,7 @@ This is the R script, called [script.R](script.R):
 glue::glue("Hello {target}", target = "world")
 ```
 
-# Attempt 1
+# Attempt 1: Singularity does not run scripts
 
 [Singularity_1](Singularity_1) is a minimal Singularity container:
 
@@ -52,7 +52,9 @@ Fatal error: cannot open file 'script.R': No such file or directory
 Error: Process completed with exit code 2.
 ```
 
-# Attempt 2
+This is a common theme: Singularity cannot run scripts.
+
+# Attempt 2: Singularity can run script text
 
 [Singularity_2](Singularity_2) is a minimal Singularity container,
 with a `runscript` section added:
@@ -61,8 +63,15 @@ with a `runscript` section added:
 Bootstrap: docker
 From: r-base
 
+%apprun R
+exec R "$@"
+
+%apprun Rscript
+exec Rscript "$@"
+
 %runscript
 exec Rscript "$@"
+# exec R "$@"
 
 %post
     Rscript -e 'install.packages("glue")'
@@ -84,14 +93,39 @@ to run the container built from [Singularity_2](Singularity_2):
 cat script.R | singularity exec singularity_2.sif R --vanilla --silent --no-echo
 ```
 
-Running this locally goes fine.
+Running this locally goes fine, also on GitHub Actions!
 
-The error GHA gives, however, is:
+# Attempt 3: clean up
+
+[Singularity_3](Singularity_3) is a minimal Singularity container,
+with a `runscript` section added:
 
 ```
-Run ./run_singularity_2.sh
+Bootstrap: docker
+From: r-base
 
+%runscript
+exec R --vanilla --silent --no-echo "$@"
+
+%post
+    Rscript -e 'install.packages("glue")'
 ```
 
+[build_singularity_3.sh](build_singularity_3.sh) is a simple shell script 
+to build a container from [Singularity_3](Singularity_3):
 
+```
+#!/bin/bash
+sudo -E singularity build singularity_3.sif Singularity_3
+```
+
+[run_singularity_3.sh](run_singularity_3.sh) is a simple shell script
+to run the container built from [Singularity_3](Singularity_3):
+
+```
+#!/bin/bash
+cat script.R | singularity exec singularity_3.sif
+```
+
+Running this locally goes fine, also on GitHub Actions!
 
