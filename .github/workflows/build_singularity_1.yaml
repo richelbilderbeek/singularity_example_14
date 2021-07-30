@@ -25,6 +25,6 @@ jobs:
       - name: Build Singularity_1
         run: ./build_singularity_1.sh
 
-      - name: Run container
+      - name: Run container, will fail
         run: ./run_singularity_1.sh || true
 
